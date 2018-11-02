@@ -75,7 +75,7 @@ def sprawdz_pole(pole, kierunek, lista_zamknieta, lista_otwarta, mapa):
     x = pole.x + kierunek[0]
     y = pole.y + kierunek[1]
     if 0 <= x < X and 0 <= y < Y:
-        if not (x == pole.rodzic_x and y == pole.rodzic_y):
+        if x != pole.x or y != pole.y:
             if mapa[x][y] != "5":
                 l_krokow = pole.l_krokow + 1
                 h = math.sqrt(pow(x - C_X, 2) + pow(y - C_Y, 2)) + l_krokow
@@ -121,6 +121,7 @@ def wyswietl_mape(mapa):
 
 def main():
     mapa = wczytaj_grid("grid.txt")
+    wyswietl_mape(mapa)
     lista_zamknieta = stworz_liste_z(X, Y)
     lista_otwarta = []
     x = S_X
@@ -128,7 +129,7 @@ def main():
     ostatnie = Pole(x, y, 0, 0, x, y)
     lista_zamknieta[x][y] = ostatnie
 
-    while not ostatnie.x == C_X and not ostatnie.y == C_Y:
+    while ostatnie.x != C_X or ostatnie.y != C_Y:
         sprawdz_pole(ostatnie, GORA, lista_zamknieta, lista_otwarta, mapa)
         sprawdz_pole(ostatnie, DOL, lista_zamknieta, lista_otwarta, mapa)
         sprawdz_pole(ostatnie, PRAWO, lista_zamknieta, lista_otwarta, mapa)
