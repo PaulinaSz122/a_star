@@ -74,20 +74,18 @@ def przeszukaj(lista, pole):
 def sprawdz_pole(pole, kierunek, lista_zamknieta, lista_otwarta, mapa):
     x = pole.x + kierunek[0]
     y = pole.y + kierunek[1]
-    if 0 <= x < X and 0 <= y < Y:
-        if x != pole.x or y != pole.y:
-            if mapa[x][y] != "5":
-                l_krokow = pole.l_krokow + 1
-                h = math.sqrt(pow(x - C_X, 2) + pow(y - C_Y, 2)) + l_krokow
-                nowe = Pole(x, y, l_krokow, h, pole.x, pole.y)
-                found_z = False
-                if lista_zamknieta[x][y] != None:
-                    if lista_zamknieta[x][y].h > nowe.h:
-                        lista_zamknieta[x][y] = nowe
-                    found_z = True
-                found_o = przeszukaj(lista_otwarta, nowe)
-                if not found_o and not found_z:
-                    lista_otwarta.append(nowe)
+    if 0 <= x < X and 0 <= y < Y and (x != pole.x or y != pole.y) and mapa[x][y] != "5":
+        l_krokow = pole.l_krokow + 1
+        h = math.sqrt(pow(x - C_X, 2) + pow(y - C_Y, 2)) + l_krokow
+        nowe = Pole(x, y, l_krokow, h, pole.x, pole.y)
+        found_z = False
+        if lista_zamknieta[x][y] != None:
+            if lista_zamknieta[x][y].h > nowe.h:
+                lista_zamknieta[x][y] = nowe
+            found_z = True
+        found_o = przeszukaj(lista_otwarta, nowe)
+        if not found_o and not found_z:
+            lista_otwarta.append(nowe)
 
 
 def szukaj_min(lista):
@@ -110,7 +108,7 @@ def szukaj_powrotu(cel, lista_zamknieta, mapa):
         x = lista_zamknieta[tmp_x][tmp_y].rodzic_x
         y = lista_zamknieta[tmp_x][tmp_y].rodzic_y
         mapa[x][y] = "3"
-
+    mapa[S_X][S_Y] = "3"
 
 def wyswietl_mape(mapa):
     for line in mapa:
@@ -121,7 +119,6 @@ def wyswietl_mape(mapa):
 
 def main():
     mapa = wczytaj_grid("grid.txt")
-    wyswietl_mape(mapa)
     lista_zamknieta = stworz_liste_z(X, Y)
     lista_otwarta = []
     x = S_X
@@ -137,6 +134,7 @@ def main():
 
         if not lista_otwarta == []:
             ostatnie = szukaj_min(lista_otwarta)
+            lista_zamknieta[ostatnie.x][ostatnie.y] = ostatnie
             lista_otwarta.remove(ostatnie)
         else:
             print("Cel jest nieosiągalny!")
