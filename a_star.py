@@ -74,18 +74,20 @@ def przeszukaj(lista, pole):
 def sprawdz_pole(pole, kierunek, lista_zamknieta, lista_otwarta, mapa):
     x = pole.x + kierunek[0]
     y = pole.y + kierunek[1]
-    if mapa[x][y] != "5" and not (0 <= x < X or 0 <= y < Y) and not (x == pole.rodzic_x and y == pole.rodzic_y):
-        l_krokow = pole.l_krokow + 1
-        h = math.sqrt(pow(x - C_X, 2) + pow(y - C_Y, 2)) + l_krokow
-        nowe = Pole(x, y, l_krokow, h, pole.x, pole.y)
-        found_z = False
-        if lista_zamknieta[x][y] != None:
-            if lista_zamknieta[x][y].h > nowe.h:
-                lista_zamknieta[x][y] = nowe
-            found_z = True
-        found_o = przeszukaj(lista_otwarta, nowe)
-        if not found_o and not found_z:
-            lista_otwarta.append(nowe)
+    if 0 <= x < X and 0 <= y < Y:
+        if not (x == pole.rodzic_x and y == pole.rodzic_y):
+            if mapa[x][y] != "5":
+                l_krokow = pole.l_krokow + 1
+                h = math.sqrt(pow(x - C_X, 2) + pow(y - C_Y, 2)) + l_krokow
+                nowe = Pole(x, y, l_krokow, h, pole.x, pole.y)
+                found_z = False
+                if lista_zamknieta[x][y] != None:
+                    if lista_zamknieta[x][y].h > nowe.h:
+                        lista_zamknieta[x][y] = nowe
+                    found_z = True
+                found_o = przeszukaj(lista_otwarta, nowe)
+                if not found_o and not found_z:
+                    lista_otwarta.append(nowe)
 
 
 def szukaj_min(lista):
