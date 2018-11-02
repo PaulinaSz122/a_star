@@ -74,13 +74,24 @@ def przeszukaj(lista, pole):
 def sprawdz_pole(pole, kierunek, lista_zamknieta, lista_otwarta, mapa):
     x = pole.x + kierunek[0]
     y = pole.y + kierunek[1]
-    l_krokow = pole.l_krokow + 1
-    h = math.sqrt(pow(x - C_X, 2) + pow(y - C_Y, 2)) + l_krokow
-    nowe = Pole(x, y, l_krokow, h, pole.x, pole.y)
-    found_o = przeszukaj(lista_zamknieta, nowe)
-    found_z = przeszukaj(lista_otwarta, nowe)
-    if not found_o and not found_z:
-        lista_otwarta.append(nowe)
+    if mapa[x][y] != "5" and 0 >= x > X and 0 >= y > Y:
+        l_krokow = pole.l_krokow + 1
+        h = math.sqrt(pow(x - C_X, 2) + pow(y - C_Y, 2)) + l_krokow
+        nowe = Pole(x, y, l_krokow, h, pole.x, pole.y)
+        found_o = przeszukaj(lista_zamknieta, nowe)
+        found_z = przeszukaj(lista_otwarta, nowe)
+        if not found_o and not found_z:
+            lista_otwarta.append(nowe)
+
+
+def szukaj_min(lista):
+    h = 100
+    pole = None
+    for field in lista:
+        if h > field.h:
+            pole = field
+            h = field.h
+    return pole
 
 
 def main():
@@ -91,6 +102,16 @@ def main():
     y = S_Y
     ostatnie = Pole(x, y, 0, 0, x, y)
     lista_zamknieta[x][y] = ostatnie
+
+    while not x == C_X and not y == C_Y:
+        sprawdz_pole(ostatnie, GORA, lista_zamknieta, lista_otwarta, mapa)
+        sprawdz_pole(ostatnie, DOL, lista_zamknieta, lista_otwarta, mapa)
+        sprawdz_pole(ostatnie, PRAWO, lista_zamknieta, lista_otwarta, mapa)
+        sprawdz_pole(ostatnie, LEWO, lista_zamknieta, lista_otwarta, mapa)
+        if not lista_otwarta == []:
+            ostatnie = szukaj_min(lista_otwarta)
+            lista_otwarta.remove(ostatnie)
+
 
 
 
