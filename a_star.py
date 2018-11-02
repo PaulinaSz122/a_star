@@ -74,12 +74,16 @@ def przeszukaj(lista, pole):
 def sprawdz_pole(pole, kierunek, lista_zamknieta, lista_otwarta, mapa):
     x = pole.x + kierunek[0]
     y = pole.y + kierunek[1]
-    if mapa[x][y] != "5" and 0 >= x > X and 0 >= y > Y:
+    if mapa[x][y] != "5" and not (0 <= x < X or 0 <= y < Y) and not (x == pole.rodzic_x and y == pole.rodzic_y):
         l_krokow = pole.l_krokow + 1
         h = math.sqrt(pow(x - C_X, 2) + pow(y - C_Y, 2)) + l_krokow
         nowe = Pole(x, y, l_krokow, h, pole.x, pole.y)
-        found_o = przeszukaj(lista_zamknieta, nowe)
-        found_z = przeszukaj(lista_otwarta, nowe)
+        found_z = False
+        if lista_zamknieta[x][y] != None:
+            if lista_zamknieta[x][y].h > nowe.h:
+                lista_zamknieta[x][y] = nowe
+            found_z = True
+        found_o = przeszukaj(lista_otwarta, nowe)
         if not found_o and not found_z:
             lista_otwarta.append(nowe)
 
@@ -94,6 +98,25 @@ def szukaj_min(lista):
     return pole
 
 
+def szukaj_powrotu(cel, lista_zamknieta, mapa):
+    x = cel.x
+    y = cel.y
+    mapa[x][y] = "3"
+    while not x == S_X and not y == S_Y:
+        tmp_x = x
+        tmp_y = y
+        x = lista_zamknieta[tmp_x][tmp_y].rodzic_x
+        y = lista_zamknieta[tmp_x][tmp_y].rodzic_y
+        mapa[x][y] = "3"
+
+
+def wyswietl_mape(mapa):
+    for line in mapa:
+        for field in line:
+            print(field, end=" ")
+        print()
+
+
 def main():
     mapa = wczytaj_grid("grid.txt")
     lista_zamknieta = stworz_liste_z(X, Y)
@@ -103,16 +126,21 @@ def main():
     ostatnie = Pole(x, y, 0, 0, x, y)
     lista_zamknieta[x][y] = ostatnie
 
-    while not x == C_X and not y == C_Y:
+    while not ostatnie.x == C_X and not ostatnie.y == C_Y:
         sprawdz_pole(ostatnie, GORA, lista_zamknieta, lista_otwarta, mapa)
         sprawdz_pole(ostatnie, DOL, lista_zamknieta, lista_otwarta, mapa)
         sprawdz_pole(ostatnie, PRAWO, lista_zamknieta, lista_otwarta, mapa)
         sprawdz_pole(ostatnie, LEWO, lista_zamknieta, lista_otwarta, mapa)
+
         if not lista_otwarta == []:
             ostatnie = szukaj_min(lista_otwarta)
             lista_otwarta.remove(ostatnie)
+        else:
+            print("Cel jest nieosiągalny!")
+            return 1
 
-
+    szukaj_powrotu(ostatnie, lista_zamknieta, mapa)
+    wyswietl_mape(mapa)
 
 
 main()
