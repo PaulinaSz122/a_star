@@ -2,6 +2,7 @@ import math
 X = 20
 Y = 20
 
+
 class Pole(object):
     def __init__(self, x, y, l_krokow, h, rodzic_x, rodzic_y):
         self.x = x
@@ -28,11 +29,32 @@ def dodaj_z(lista_zamknieta, pole_o, lista_otwarta):
     lista_otwarta.delete(pole_o)
 
 
-def stworz_liste_z():
+def stworz_liste_z(x, y):
     """Utworzenie tablicy do wpisywania wartości listy zamkniętej"""
     lista = []
-    for i in range(X):
+    for i in range(x):
         lista.append([])
-        for j in range(Y):
+        for j in range(y):
             lista[i].append(None)
     return lista
+
+
+def wczytaj_grid(nazwa_pliku):
+    mount_of_lines = 0
+    mapa = []
+    plik = open(nazwa_pliku, "r")
+    for line in plik:
+        mapa.append([])
+        for field in line:
+            if field != " " and field != "\n":
+                mapa[mount_of_lines].append(field)
+        mount_of_lines += 1
+    return mapa
+
+
+mapa = wczytaj_grid("grid.txt")
+for line in mapa:
+    for field in line:
+        print(field, end=" ")
+    print()
+
