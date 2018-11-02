@@ -110,6 +110,7 @@ def szukaj_powrotu(cel, lista_zamknieta, mapa):
         mapa[x][y] = "3"
     mapa[S_X][S_Y] = "3"
 
+
 def wyswietl_mape(mapa):
     for line in mapa:
         for field in line:
@@ -145,3 +146,4 @@ def main():
 
 
 main()
+input("\n\nAby zakończyć program, naciśnij klawisz Enter.")
