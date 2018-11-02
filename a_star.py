@@ -52,9 +52,12 @@ def wczytaj_grid(nazwa_pliku):
     return mapa
 
 
-mapa = wczytaj_grid("grid.txt")
-for line in mapa:
-    for field in line:
-        print(field, end=" ")
-    print()
+def main():
+    mapa = wczytaj_grid("grid.txt")
+    for line in mapa:
+        for field in line:
+            print(field, end=" ")
+        print()
 
+
+main()
